@@ -41,6 +41,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.checkAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uncheckAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,25 +95,25 @@
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editModeToolStripMenuItem,
-            this.settingsToolStripMenuItem});
+            this.settingsToolStripMenuItem,
+            this.checkAllToolStripMenuItem,
+            this.uncheckAllToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 24);
             this.optionsToolStripMenuItem.Text = "Options";
             // 
             // editModeToolStripMenuItem
             // 
-            this.editModeToolStripMenuItem.Checked = true;
             this.editModeToolStripMenuItem.CheckOnClick = true;
-            this.editModeToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.editModeToolStripMenuItem.Name = "editModeToolStripMenuItem";
-            this.editModeToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.editModeToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.editModeToolStripMenuItem.Text = "Edit Mode";
             this.editModeToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.editModeToolStripMenuItem_CheckStateChanged);
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // aboutToolStripMenuItem
@@ -158,6 +160,21 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(800, 443);
             this.flowLayoutPanel1.TabIndex = 4;
             // 
+            // checkAllToolStripMenuItem
+            // 
+            this.checkAllToolStripMenuItem.Name = "checkAllToolStripMenuItem";
+            this.checkAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.checkAllToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
+            this.checkAllToolStripMenuItem.Text = "Check All";
+            // 
+            // uncheckAllToolStripMenuItem
+            // 
+            this.uncheckAllToolStripMenuItem.Name = "uncheckAllToolStripMenuItem";
+            this.uncheckAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.A)));
+            this.uncheckAllToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
+            this.uncheckAllToolStripMenuItem.Text = "Uncheck All";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -195,5 +212,7 @@
         private Button button1;
         private Label label1;
         private FlowLayoutPanel flowLayoutPanel1;
+        private ToolStripMenuItem checkAllToolStripMenuItem;
+        private ToolStripMenuItem uncheckAllToolStripMenuItem;
     }
 }

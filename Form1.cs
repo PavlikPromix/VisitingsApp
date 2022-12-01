@@ -5,6 +5,7 @@ namespace VisitingsApp
         public Form1()
         {
             InitializeComponent();
+            editModeToolStripMenuItem.Checked = true; // debug
         }
 
         private void HideEditMenu()
@@ -43,14 +44,7 @@ namespace VisitingsApp
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            if (!editModeToolStripMenuItem.Checked)
-                HideEditMenu();
-            else UnhideEditMenu();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void CreateName(string name)
         {
             Panel panel = new Panel() { Size = new Size(200, 30), };
 
@@ -64,18 +58,65 @@ namespace VisitingsApp
             };
             button.Click += Button_Click;
             panel.Controls.Add(button);
-            
-            panel.Controls.Add(new Label { 
-                Text = textBox1.Text,
+
+            panel.Controls.Add(new Label
+            {
+                Text = name,
                 Bounds = new Rectangle(30, 3, 140, 25)
             });
-            
-            panel.Controls.Add(new CheckBox { 
-                Text = "", 
+
+            panel.Controls.Add(new CheckBox
+            {
+                Text = "",
                 Bounds = new Rectangle(170, 3, 25, 25)
             });
-            
+
             flowLayoutPanel1.Controls.Add(panel);
+        }
+
+        private List<string> GetNames()
+        {
+            if (flowLayoutPanel1.Controls.Count == 0)
+                return new List<string> { };
+            List<string> names = new List<string>();
+            foreach (var panel in flowLayoutPanel1.Controls)
+            {
+                foreach (var item in (panel as Panel).Controls)
+                {
+                    if (item.GetType() == typeof(Label))
+                    {
+                        names.Add((item as Label).Text);
+                    }
+                }
+            }
+            return names;
+        }
+
+        private void SetNames(ref List<string> names)
+        {
+            flowLayoutPanel1.Controls.Clear();
+            foreach (var name in names)
+                CreateName(name);
+        }
+
+        private void SortNames()
+        {
+            List<string> names = GetNames();
+            names.Sort();
+            SetNames(ref names);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (!editModeToolStripMenuItem.Checked)
+                HideEditMenu();
+            else UnhideEditMenu();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CreateName(textBox1.Text);
+            SortNames();
         }
 
         private void Button_Click(object? sender, EventArgs e)

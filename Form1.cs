@@ -1,11 +1,20 @@
+using System.Text.Json;
+
 namespace VisitingsApp
 {
     public partial class Form1 : Form
     {
+        List<Person>? people;
+        string path = @"data.json";
         public Form1()
         {
             InitializeComponent();
             editModeToolStripMenuItem.Checked = true; // debug
+            people = new List<Person>();
+            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\VisitingApp\data.json";
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\VisitingApp");
+            if (File.Exists(path))
+                LoadData();
         }
 
         private void HideEditMenu()
@@ -44,7 +53,7 @@ namespace VisitingsApp
             }
         }
 
-        private void CreateName(string name)
+        private void CreateName(string name, bool c)
         {
             Panel panel = new Panel() { Size = new Size(200, 30), };
 
@@ -68,42 +77,48 @@ namespace VisitingsApp
             panel.Controls.Add(new CheckBox
             {
                 Text = "",
-                Bounds = new Rectangle(170, 3, 25, 25)
+                Bounds = new Rectangle(170, 3, 25, 25),
+                Checked = c
             });
 
             flowLayoutPanel1.Controls.Add(panel);
         }
 
-        private List<string> GetNames()
+        private void GetNames()
         {
+            people.Clear();
             if (flowLayoutPanel1.Controls.Count == 0)
-                return new List<string> { };
-            List<string> names = new List<string>();
+                return;
             foreach (var panel in flowLayoutPanel1.Controls)
             {
+                string name = "";
+                bool check = false;
                 foreach (var item in (panel as Panel).Controls)
                 {
                     if (item.GetType() == typeof(Label))
                     {
-                        names.Add((item as Label).Text);
+                        name = (item as Label).Text;
+                    }
+                    if (item.GetType() == typeof(CheckBox))
+                    {
+                        check = (item as CheckBox).Checked;
                     }
                 }
+                people.Add(new Person(name, check));
             }
-            return names;
         }
 
-        private void SetNames(ref List<string> names)
+        private void UpdateNames()
         {
             flowLayoutPanel1.Controls.Clear();
-            foreach (var name in names)
-                CreateName(name);
+            foreach (var p in people)
+                CreateName(p.Name, p.Checked);
         }
 
         private void SortNames()
         {
-            List<string> names = GetNames();
-            names.Sort();
-            SetNames(ref names);
+            people = people.OrderBy(p => p.Name).ToList();
+            UpdateNames();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -115,7 +130,8 @@ namespace VisitingsApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CreateName(textBox1.Text);
+            CreateName(textBox1.Text, false);
+            GetNames();
             SortNames();
         }
 
@@ -123,6 +139,13 @@ namespace VisitingsApp
         {
             Button s = sender as Button;
             s.Click -= Button_Click;
+            foreach (var item in s.Parent.Controls)
+            {
+                if (item.GetType() == typeof(Label))
+                {
+                    people.RemoveAt(people.FindIndex(p => p.Name == (item as Label).Text));
+                }
+            }
             s.Parent.Dispose();
         }
 
@@ -148,6 +171,32 @@ namespace VisitingsApp
                 button1.PerformClick();
                 (sender as TextBox).Text = "";
             }
+        }
+
+        private async void saveToolStripMenuItem_ClickAsync(object sender, EventArgs e)
+        {
+            await SaveData();
+        }
+
+        private async Task SaveData()
+        {
+            GetNames();
+            await File.WriteAllTextAsync(path, string.Empty);
+            using (FileStream f = new FileStream(path, FileMode.OpenOrCreate))
+                await JsonSerializer.SerializeAsync<List<Person>>(f, people);
+            
+        }
+
+        private async void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            using (FileStream f = new FileStream(path, FileMode.OpenOrCreate))
+                people = await JsonSerializer.DeserializeAsync<List<Person>>(f);
+            UpdateNames();
         }
     }
 }
